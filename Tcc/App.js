@@ -1,20 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import HomePage from './Screens/Cadastro/Teste';
-import HomeScreen from './Screens/Login/Login';
-import Home from './Screens/Home/Home';
-import Teste from './Screens/Cadastro/Teste';
-import CourseContent from './Screens/Playlist/Playlist';
-import TodoApp from './Screens/Playlist/Playlist';
-import Conteudo from './Screens/Conteudo/Conteudo';
-import Exercicios from './Screens/Exercicios/Exercícios';
-import Quizz from './Screens/Exercicios/Quizz';
-import Exames from './Screens/Exames/Exames';
+
+import Routes from './Routes/Routes';
+import HomeScreen from './Screens/Desempenho/Desempenho';
+import HomeJogos from './Screens/Jogo/Jogo';
 
 export default function App() {
   return (
-   <Exames/>
-  );
+   <HomeJogos/>
+  )
 }
 
 const styles = StyleSheet.create({

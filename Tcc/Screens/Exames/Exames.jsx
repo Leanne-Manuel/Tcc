@@ -10,6 +10,8 @@ import {
   Alert,
 } from "react-native";
 
+
+
 const questoes = [
   {
     id: "1",
@@ -21,78 +23,111 @@ const questoes = [
       "Taxa fixa de retorno em um investimento.",
     ],
     respostaCorreta: "Rendimento sobre o principal mais os juros acumulados.",
-    explicacao: "Juros compostos significam que os juros são calculados não apenas sobre o capital inicial, mas também sobre os juros acumulados de períodos anteriores.",
+    explicacao:
+      "Juros compostos são calculados sobre o capital inicial e os juros acumulados em períodos anteriores.",
   },
   {
-    id: "3",
+    id: "2",
     tipo: "calculo",
-    pergunta: "Se você investir R$1.000 a uma taxa de juros anual de 5%, quanto terá após um ano?",
+    pergunta:
+      "Se você investir R$1.000 a uma taxa de juros anual de 5%, quanto terá após um ano?",
     respostaCorreta: "1050",
-    explicacao: "R$1.000 investidos a 5% ao ano resultam em R$1.050 após um ano, pois 5% de R$1.000 é R$50, e R$1.000 + R$50 = R$1.050.",
+    explicacao: "R$1.000 a 5% ao ano resultam em R$1.050 após um ano.",
   },
-  // Outras questões...
+  // Adicione mais questões conforme necessário
 ];
 
-const HomeScreen = () => {
+const Exames = ({ navigation }) => {
   const [respostas, setRespostas] = useState({});
   const [quizConcluido, setQuizConcluido] = useState(false);
 
   const confirmarRespostas = () => {
-    let acertos = 0;
-    questoes.forEach((questao) => {
-      if (respostas[questao.id] === questao.respostaCorreta) {
-        acertos++;
-      }
-    });
-    Alert.alert("Resultado", `Você acertou ${acertos} de ${questoes.length} questões!`);
     setQuizConcluido(true);
+    // Aqui, você pode adicionar lógica para calcular a pontuação
   };
 
-  const responderQuiz = (questaoId, resposta) => {
-    setRespostas((prevRespostas) => ({
-      ...prevRespostas,
-      [questaoId]: resposta,
-    }));
+  const reiniciarQuiz = () => {
+    setRespostas({});
+    setQuizConcluido(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {questoes.map((questao) => (
-          <View key={questao.id} style={styles.perguntaContainer}>
+      <ScrollView>
+        {questoes.map((questao, index) => (
+          <View key={index} style={styles.perguntaContainer}>
             <Text style={styles.perguntaTexto}>{questao.pergunta}</Text>
-            {questao.tipo === "teorica" ? (
-              questao.opcoes.map((opcao) => (
+            {questao.tipo === "teorica" &&
+              questao.opcoes.map((opcao, idx) => (
                 <TouchableOpacity
-                  key={opcao}
+                  key={idx}
                   style={[
                     styles.opcao,
-                    respostas[questao.id] === opcao ? styles.opcaoSelecionada : {},
-                    quizConcluido && respostas[questao.id] === questao.respostaCorreta ? styles.opcaoCorreta : {},
-                    quizConcluido && respostas[questao.id] !== questao.respostaCorreta && opcao === questao.respostaCorreta ? styles.opcaoCorreta : {},
-                    quizConcluido && opcao === respostas[questao.id] && opcao !== questao.respostaCorreta ? styles.opcaoIncorreta : {},
+                    respostas[questao.id] === opcao
+                      ? styles.opcaoSelecionada
+                      : {},
+                    quizConcluido
+                      ? opcao === questao.respostaCorreta
+                        ? styles.opcaoCorreta
+                        : styles.opcao
+                      : {},
+                    quizConcluido &&
+                    respostas[questao.id] !== questao.respostaCorreta &&
+                    opcao === questao.respostaCorreta
+                      ? styles.opcaoCorreta
+                      : {},
+                    quizConcluido &&
+                    respostas[questao.id] === opcao &&
+                    opcao !== questao.respostaCorreta
+                      ? styles.opcaoIncorreta
+                      : {},
                   ]}
-                  onPress={() => responderQuiz(questao.id, opcao)}
+                  onPress={() =>
+                    !quizConcluido &&
+                    setRespostas({ ...respostas, [questao.id]: opcao })
+                  }
                 >
                   <Text style={styles.opcaoTexto}>{opcao}</Text>
                 </TouchableOpacity>
-              ))
-            ) : (
+              ))}
+            {questao.tipo === "calculo" && (
               <TextInput
                 style={styles.input}
-                onChangeText={(text) => responderQuiz(questao.id, text)}
+                onChangeText={(text) =>
+                  setRespostas({ ...respostas, [questao.id]: text })
+                }
                 value={respostas[questao.id]}
                 keyboardType="numeric"
+                editable={!quizConcluido}
               />
             )}
-            {quizConcluido && respostas[questao.id] === questao.respostaCorreta && (
-              <Text style={styles.explicacao}>{questao.explicacao}</Text>
-            )}
+            {quizConcluido &&
+              respostas[questao.id] !== questao.respostaCorreta && (
+                <Text style={styles.explicacao}>
+                  Resposta correta: {questao.respostaCorreta}
+                </Text>
+              )}
+            {quizConcluido &&
+              respostas[questao.id] === questao.respostaCorreta && (
+                <Text style={styles.explicacao}>{questao.explicacao}</Text>
+              )}
           </View>
         ))}
-        <TouchableOpacity style={styles.botaoConfirmar} onPress={confirmarRespostas}>
-          <Text style={styles.botaoTexto}>Confirmar Respostas</Text>
-        </TouchableOpacity>
+        {!quizConcluido ? (
+          <TouchableOpacity
+            style={styles.botaoConfirmar}
+            onPress={confirmarRespostas}
+          >
+            <Text style={styles.botaoTexto}>Confirmar Respostas</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.botaoReiniciar}
+            onPress={reiniciarQuiz}
+          >
+            <Text style={styles.botaoTexto}>Voltar a Tentar</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -103,7 +138,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  scrollView: {},
   perguntaContainer: {
     marginBottom: 20,
   },
@@ -112,11 +146,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  explicacaoTexto: {
-    marginTop: 10,
-    fontStyle: 'italic',
-    color: '#006400', // Um verde escuro para a explicação
-  },
   opcao: {
     padding: 10,
     borderWidth: 1,
@@ -124,6 +153,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     backgroundColor: "#f0f0f0",
+  },
+  opcaoSelecionada: {
+    backgroundColor: "#add8e6",
+  },
+  opcaoCorreta: {
+    backgroundColor: "#81C784",
+  },
+  opcaoIncorreta: {
+    backgroundColor: "#E57373",
   },
   opcaoTexto: {
     fontSize: 16,
@@ -135,6 +173,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginBottom: 10,
+    backgroundColor: "#fff",
   },
   botaoConfirmar: {
     backgroundColor: "#007bff",
@@ -142,12 +181,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
   },
+  botaoReiniciar: {
+    backgroundColor: "#FFA07A",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
   botaoTexto: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },
+  explicacao: {
+    marginTop: 10,
+    fontStyle: "italic",
+    fontSize: 14,
+  },
 });
 
-export default HomeScreen;
-
+export default Exames;
