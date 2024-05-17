@@ -55,12 +55,6 @@ const QuizScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={reiniciarQuiz} style={styles.voltarBotao}>
-          <AntDesign name="arrowleft" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Quiz de Educação Financeira</Text>
-      </View>
       <ScrollView style={styles.scrollView}>
         {/* Renderização das perguntas e opções */}
         {quizData.map((item, index) => (

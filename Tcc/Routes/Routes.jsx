@@ -10,6 +10,9 @@ import CourseContent from '../Screens/Curso/Playlist';
 import QuizScreen from '../Screens/Exercicios/Quizz';
 import Analise from '../Screens/Desempenho/Desempenho';
 import HomeJogos from '../Screens/Jogo/Jogo';
+import SimuladorInvestimentos from '../Screens/Jogo/Simulador';
+import DesafioOrcamento from '../Screens/Jogo/Orcamento';
+import JogoDaDivida from '../Screens/Jogo/Divida';
 
 
 const Stack = createStackNavigator();
@@ -29,6 +32,12 @@ const Routes = () => {
 
         <Stack.Screen name="CursoConteudo" component={Conteudo} />
         <Stack.Screen name="Quizz" component={QuizScreen} />
+
+<Stack.Screen name="DesafioDeOrcamento" component={DesafioOrcamento} />
+
+<Stack.Screen name="SimuladorDeInvestimentos" component={SimuladorInvestimentos} />
+
+<Stack.Screen name="JogoDaDivida" component={JogoDaDivida} />
 
       </Stack.Navigator>
     </NavigationContainer>

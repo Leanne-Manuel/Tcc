@@ -82,13 +82,7 @@ const CourseContent = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.courseContent}>
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Icon name="arrow-left" size={24} color="#666" style={styles.backIcon}/>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Python Basics</Text>
-
-      </View>
+      
        {/* <Text style={styles.subtitle}>By Tubeguruji</Text>*/}
         <Image source={require('../../assets/Desempenho.png')} style={styles.image} />
         

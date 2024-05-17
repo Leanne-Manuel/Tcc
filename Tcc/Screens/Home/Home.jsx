@@ -54,10 +54,6 @@ const HomeScreen = ({navigation}) => {
   };
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.topBar}>
-        <Icon name="school" size={40} color="white" />
-        <Text style={styles.topBarTitle}>Nome do Aplicativo</Text>
-      </View>
 
       <View style={styles.row}>
       {cursos.map(curso => (
