@@ -13,6 +13,8 @@ import HomeJogos from '../Screens/Jogo/Jogo';
 import SimuladorInvestimentos from '../Screens/Jogo/Simulador';
 import DesafioOrcamento from '../Screens/Jogo/Orcamento';
 import JogoDaDivida from '../Screens/Jogo/Divida';
+import Capa from '../Screens/Capa/Capa.';
+import Carrossel from '../Screens/Capa/Slide';
 
 
 const Stack = createStackNavigator();
@@ -20,7 +22,10 @@ const Stack = createStackNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomePrincipal">
+      <Stack.Navigator initialRouteName="Capa">
+      <Stack.Screen name="Capa" component={Capa} />
+      <Stack.Screen name="Carrossel" component={Carrossel} />
+
         <Stack.Screen name="HomePrincipal" component={HomeScreen} />
         <Stack.Screen name="HomeCursos" component={CourseContent} />
         <Stack.Screen name="HomeExames" component={Exames} />
