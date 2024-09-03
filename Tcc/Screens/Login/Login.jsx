@@ -1,145 +1,101 @@
-import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, Image, ScrollView } from 'react-native';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 
-const HomeScreen = () => {
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleLogin = () => {
+    const emailValid = validateEmail(email);
+    const passwordValid = password.length >= 6;
+
+    setEmailError(emailValid ? '' : 'Email inválido');
+    setPasswordError(passwordValid ? '' : 'Senha deve ter pelo menos 6 caracteres');
+
+    if (emailValid && passwordValid) {
+      Alert.alert('Login', `Email: ${email}, Password: ${password}`);
+      navigation.replace('DrawerNavigator');
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
-          <Image source={require('../../assets/teste.png')} style={styles.logo} />
-          <Text style={styles.headerText}>Bem-vindo de volta!</Text>
-          <Text style={styles.subHeaderText}>Vamos fazer seu login</Text>
-        </View>
+    <View style={styles.container}>
+      <Image source={require('../../assets/EduFinanca.png')} style={styles.logo} />
+      
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        onChangeText={setEmail}
+        value={email}
+        keyboardType="email-address"
+      />
+      {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email ou Número de Telefone"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholderTextColor="#808080"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            secureTextEntry
-            autoCapitalize="none"
-            placeholderTextColor="#808080"
-          />
-          <TouchableOpacity>
-            <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
-          </TouchableOpacity>
-        </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Senha"
+        onChangeText={setPassword}
+        value={password}
+        secureTextEntry
+      />
+      {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#3b5998' }]}>
-            <FontAwesome name="facebook" size={24} color="white" />
-            <Text style={styles.socialButtonText}>Entrar com Facebook</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#db4a39' }]}>
-            <FontAwesome name="google" size={24} color="white" />
-            <Text style={styles.socialButtonText}>Entrar com Google</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.socialButton, { backgroundColor: '#1da1f2' }]}>
-            <Feather name="twitter" size={24} color="white" />
-            <Text style={styles.socialButtonText}>Entrar com Twitter</Text>
-          </TouchableOpacity>
-        </View>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
 
-        <View style={styles.registerContainer}>
-          <TouchableOpacity style={[styles.registerButton, { backgroundColor: '#FFA500' }]}>
-            <Text style={styles.registerButtonText}>Não tem uma conta? Registre-se agora</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
+        <Text style={styles.linkText}> Ainda não possui uma conta?Criar uma conta</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'space-around',
-  },
-  header: {
-    alignItems: 'center',
-    marginTop: 40,
+    justifyContent: 'center',
+    padding: 20,
   },
   logo: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
-  headerText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 20,
-  },
-  subHeaderText: {
-    fontSize: 18,
-    color: '#808080',
-    marginTop: 10,
-  },
-  inputContainer: {
-    paddingHorizontal: 20,
+    width: 150, // Aumentado de 100 para 150
+    height: 150, // Aumentado de 100 para 150
+    alignSelf: 'center',
+    marginBottom: 20,
   },
   input: {
-    height: 50,
-    borderColor: '#808080',
+    height: 40,
+    borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    marginVertical: 15,
-    fontSize: 16,
-    color: '#333',
+    marginBottom: 10,
+    padding: 10,
   },
-  forgotPasswordText: {
-    color: '#0000FF',
-    fontSize: 16,
-    textAlign: 'right',
+  button: {
+    backgroundColor: '#3498db',
+    padding: 10,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  linkText: {
+    color: '#3498db',
+    textAlign: 'center',
     marginTop: 10,
   },
-  buttonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  socialButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginVertical: 20,
-  },
-  socialButtonText: {
-    color: 'white',
-    fontSize: 18,
-    marginLeft: 10,
-    fontWeight: 'bold',
-  },
-  registerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 40,
-  },
-  registerButton: {
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-  },
-  registerButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  error: {
+    color: 'red',
+    marginBottom: 10,
   },
 });
 
-export default HomeScreen;
+export default LoginScreen;
