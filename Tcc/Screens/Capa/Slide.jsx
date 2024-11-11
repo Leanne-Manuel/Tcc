@@ -19,7 +19,7 @@ const Carrossel = () => {
         if (!isLastSlide) {
             setIndex(index + 1);
         } else {
-            navigation.navigate('HomePrincipal'); // Certifique-se que o nome é exatamente igual ao definido nas rotas
+            navigation.navigate('HomeLogin'); // Certifique-se que o nome é exatamente igual ao definido nas rotas
         }
     };
 

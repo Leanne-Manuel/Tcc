@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// HomeNiveis.js
+import React from 'react';
 import {
   View,
   Text,
@@ -7,12 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  ActivityIndicator,
-} from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
-import HomeScreen from "../Home/Home";
+} from 'react-native';
 
 const levels = [
   {
@@ -37,7 +33,7 @@ const levels = [
 
 const HomeNiveis = ({ navigation }) => {
   const handleSelectLevel = (levelId) => {
-    navigation.navigate("LoadingScreen");
+    navigation.navigate("HomeLoading");
   };
 
   return (
@@ -61,67 +57,6 @@ const HomeNiveis = ({ navigation }) => {
   );
 };
 
-const LoadingScreen = ({ navigation }) => {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((currentProgress) => {
-        const nextProgress = currentProgress + 0.1;
-        if (nextProgress >= 1) {
-          clearInterval(interval);
-          navigation.replace("Home"); // Substitui a tela atual pela Home
-        }
-        return nextProgress;
-      });
-    }, 200);
-    return () => clearInterval(interval);
-  }, [navigation]);
-
-  return (
-    <View style={styles.loadingContainer}>
-      <Text>Preparando o seu curso...</Text>
-      {/*Alterar a dimensão da imagem*/}
-      <Image
-        source={require("../../assets/Cursos.png")}
-        style={styles.loadingImage}
-      />
-
-      <ActivityIndicator size="large" color="#2196F3" />
-    </View>
-  );
-};
-
-const Home = () => {
-  return (
-    <View style={styles.homeContainer}>
-      <Text>Bem-vindo ao Curso!</Text>
-    </View>
-  );
-};
-
-const Stack = createNativeStackNavigator();
-
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeNiveis">
-        <Stack.Screen
-          name="HomeNiveis"
-          component={HomeNiveis}
-          options={{ title: "Escolha Seu Nível" }}
-        />
-        <Stack.Screen
-          name="LoadingScreen"
-          component={LoadingScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -130,21 +65,6 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
     paddingBottom: 20,
-  },
-  header: {
-    padding: 20,
-    backgroundColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#007aff",
   },
   levelItem: {
     flexDirection: "row",
@@ -176,17 +96,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#666",
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  homeContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
 });
 
-export default App;
+export default HomeNiveis;
