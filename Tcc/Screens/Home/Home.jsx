@@ -1,7 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,11 +33,35 @@ const Box = ({ title, imageUri, onPress }) => (
 );
 
 const HomeScreen = ({ navigation }) => {
+  const handleNavigation = (title) => {
+    switch (title) {
+      case 'Cursos':
+        navigation.navigate('HomeCursos');
+        break;
+      case 'Exames':
+        navigation.navigate('HomeExames');
+        break;
+      case 'Livros':
+        navigation.navigate('HomeLivros');
+        break;
+      case 'Exercícios':
+        navigation.navigate('HomeExercicios');
+        break;
+      default:
+        console.log('Nenhuma tela encontrada');
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.row}>
         {cursos.map((curso) => (
-          <Box key={curso.id} title={curso.title} imageUri={curso.imageUri} onPress={() => navigation.navigate(curso.title)} />
+          <Box 
+            key={curso.id} 
+            title={curso.title} 
+            imageUri={curso.imageUri} 
+            onPress={() => handleNavigation(curso.title)} 
+          />
         ))}
       </View>
 
@@ -71,29 +102,27 @@ const RecompensasConquistasScreen = () => (
   </View>
 );
 
-const DrawerNavigator = () => {
+const HomePrincipal = () => {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        screenOptions={({ navigation }) => ({
-          headerLeft: () => (
-            <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
-              <Text style={styles.menuIcon}>☰</Text>
-            </TouchableOpacity>
-          ),
-          headerTitle: () => (
-            <View style={styles.headerTitle}>
-              <Image source={require('../../assets/EduFinanca.png')} style={styles.logo} />
-              <Text style={styles.appTitle}>Educação Financeira</Text>
-            </View>
-          ),
-        })}
-      >
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Notícias e Dicas" component={NoticiasDicasScreen} />
-        <Drawer.Screen name="Recompensas e Conquistas" component={RecompensasConquistasScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Drawer.Navigator
+      screenOptions={({ navigation }) => ({
+        headerLeft: () => (
+          <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+        ),
+        headerTitle: () => (
+          <View style={styles.headerTitle}>
+            <Image source={require('../../assets/EduFinanca.png')} style={styles.logo} />
+            <Text style={styles.appTitle}>Educação Financeira</Text>
+          </View>
+        ),
+      })}
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Notícias e Dicas" component={NoticiasDicasScreen} />
+      <Drawer.Screen name="Recompensas e Conquistas" component={RecompensasConquistasScreen} />
+    </Drawer.Navigator>
   );
 };
 
@@ -215,4 +244,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DrawerNavigator;
+export default HomePrincipal;

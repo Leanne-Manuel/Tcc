@@ -24,11 +24,6 @@ const conteudos = [
           "A educação financeira é a chave para uma vida financeira saudável. Entender os princípios básicos de como gerir suas finanças pode ajudá-lo a tomar decisões mais informadas, economizar mais dinheiro e investir de forma inteligente para o futuro.",
       },
       {
-        tipo: "video",
-        uri: "https://exemplo-de-url-para-video.com/video-introducao",
-        descricao: "Assista ao vídeo introdutório sobre educação financeira.",
-      },
-      {
         tipo: "dica",
         texto:
           "Dica: Comece por acompanhar seus gastos mensais para entender melhor para onde vai o seu dinheiro.",
@@ -36,99 +31,84 @@ const conteudos = [
     ],
     imagemUri: require("../../assets/Jogos.png"),
   },
-
   {
     id: "2",
-    tipo: "quiz",
-    titulo: "Quiz: Introdução",
-    perguntas: [
-      {
-        pergunta: "Qual é o primeiro passo para gerir suas finanças pessoais?",
-        opcoes: [
-          "Fazer um empréstimo",
-          "Criar um orçamento",
-          "Gastar tudo e economizar depois",
-        ],
-        respostaCorreta: "Criar um orçamento",
-      },
-    ],
-  },
-  {
-    id: "3",
     tipo: "materia",
-    titulo: "Introdução à Educação Financeira",
+    titulo: "Gestão de Finanças Pessoais",
     conteudo: [
       {
         tipo: "paragrafo",
         texto:
-          "A educação financeira é a chave para uma vida financeira saudável. Entender os princípios básicos de como gerir suas finanças pode ajudá-lo a tomar decisões mais informadas, economizar mais dinheiro e investir de forma inteligente para o futuro.",
-      },
-      {
-        tipo: "video",
-        uri: "https://exemplo-de-url-para-video.com/video-introducao",
-        descricao: "Assista ao vídeo introdutório sobre educação financeira.",
+          "Gerir suas finanças pessoais é essencial para garantir uma vida financeira equilibrada. Isso envolve criar um orçamento, acompanhar suas despesas e encontrar formas de economizar e investir seu dinheiro.",
       },
       {
         tipo: "dica",
         texto:
-          "Dica: Comece por acompanhar seus gastos mensais para entender melhor para onde vai o seu dinheiro.",
+          "Dica: Utilize aplicativos de controle financeiro para acompanhar suas despesas e receitas de forma prática.",
       },
     ],
     imagemUri: require("../../assets/Exames.png"),
   },
   {
-    id: "4",
-    tipo: "quiz",
-    titulo: "Quiz: Introdução",
-    perguntas: [
+    id: "3",
+    tipo: "materia",
+    titulo: "Planejamento Financeiro a Longo Prazo",
+    conteudo: [
       {
-        pergunta: "Qual é o primeiro passo para gerir suas finanças pessoais?",
-        opcoes: [
-          "Fazer um empréstimo",
-          "Criar um orçamento",
-          "Gastar tudo e economizar depois",
-        ],
-        respostaCorreta: "Criar um orçamento",
+        tipo: "paragrafo",
+        texto:
+          "O planejamento financeiro a longo prazo é crucial para alcançar seus objetivos financeiros. Isso inclui a criação de um plano de aposentadoria, investimentos e a gestão de grandes despesas futuras.",
+      },
+      {
+        tipo: "dica",
+        texto:
+          "Dica: Defina metas financeiras de longo prazo e crie um plano para alcançá-las, ajustando-o conforme necessário ao longo do tempo.",
       },
     ],
+    imagemUri: require("../../assets/Jogos.png"),
   },
-  // Adicione mais conteúdos conforme necessário
+  {
+    id: "4",
+    tipo: "materia",
+    titulo: "Investimentos e Riscos",
+    conteudo: [
+      {
+        tipo: "paragrafo",
+        texto:
+          "Investir é uma maneira de fazer seu dinheiro crescer, mas envolve riscos. Entender os diferentes tipos de investimentos e seus riscos associados pode ajudar a tomar decisões mais informadas.",
+      },
+      {
+        tipo: "dica",
+        texto:
+          "Dica: Diversifique seus investimentos para reduzir o risco e melhorar a potencial de retorno.",
+      },
+    ],
+    imagemUri: require("../../assets/Exames.png"),
+  },
 ];
 
 const Conteudo = () => {
-  const navigation = useNavigation(); // Correção: use o hook useNavigation aqui
+  const navigation = useNavigation();
   const [indexAtual, setIndexAtual] = useState(0);
-  const [respostaSelecionada, setRespostaSelecionada] = useState("");
 
   const conteudoAtual = conteudos[indexAtual];
 
   const avancarConteudo = () => {
-    setRespostaSelecionada("");
     if (indexAtual < conteudos.length - 1) {
       setIndexAtual(indexAtual + 1);
     } else {
       Alert.alert("Parabéns", "Você completou todas as aulas!", [
         {
           text: "OK",
-          onPress: () => navigation.navigate("CursoConteudo"), // Corrigido: use navigation.navigate
+          onPress: () => navigation.navigate("HomeCursos"), // Alterado para "HomeCursos"
         },
       ]);
     }
   };
 
   const voltarConteudo = () => {
-    setRespostaSelecionada("");
     if (indexAtual > 0) {
       setIndexAtual(indexAtual - 1);
-    }
-  };
-
-  const responderQuiz = (opcao, respostaCorreta) => {
-    setRespostaSelecionada(opcao);
-    if (opcao === respostaCorreta) {
-      Alert.alert("Correto!", "Você acertou a resposta.");
-    } else {
-      Alert.alert("Incorreto", "Tente novamente.");
     }
   };
 
@@ -146,14 +126,6 @@ const Conteudo = () => {
                     {item.texto}
                   </Text>
                 );
-              case "video":
-                return (
-                  <View key={index} style={styles.videoContainer}>
-                    {/* Exemplo de integração de vídeo - substitua por seu componente de vídeo */}
-                    <Text style={styles.videoDescricao}>{item.descricao}</Text>
-                    {/* Você pode usar uma biblioteca como react-native-video ou uma WebView para vídeos do YouTube */}
-                  </View>
-                );
               case "dica":
                 return (
                   <Text key={index} style={styles.dica}>
@@ -164,24 +136,6 @@ const Conteudo = () => {
                 return null;
             }
           })}
-        </View>
-      );
-    } else if (conteudoAtual.tipo === "quiz") {
-      return (
-        <View>
-          <Text style={styles.titulo}>{conteudoAtual.titulo}</Text>
-          {conteudoAtual.perguntas.map((pergunta, index) => (
-            <View key={index}>
-              <Text style={styles.quizPergunta}>{pergunta.pergunta}</Text>
-              {pergunta.opcoes.map((opcao, idx) => (
-                <Button
-                  key={idx}
-                  title={opcao}
-                  onPress={() => responderQuiz(opcao, pergunta.respostaCorreta)}
-                />
-              ))}
-            </View>
-          ))}
         </View>
       );
     }
@@ -246,7 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  conteudo: {
+  paragrafo: {
     fontSize: 16,
     marginBottom: 20,
   },
@@ -254,11 +208,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 200,
     marginBottom: 20,
-  },
-  quizPergunta: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   botoesContainer: {
     flexDirection: "row",

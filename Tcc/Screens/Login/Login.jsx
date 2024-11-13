@@ -47,11 +47,11 @@ const LoginScreen = ({ navigation }) => {
       />
       {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeNiveis')}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
+      <TouchableOpacity onPress={() => navigation.navigate('HomeCadastro')}>
         <Text style={styles.linkText}> Ainda não possui uma conta?Criar uma conta</Text>
       </TouchableOpacity>
     </View>

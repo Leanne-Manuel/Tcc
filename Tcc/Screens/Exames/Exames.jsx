@@ -4,199 +4,115 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   TouchableOpacity,
-  TextInput,
-  SafeAreaView,
-  Alert,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
-
-
-const questoes = [
-  {
-    id: "1",
-    tipo: "teorica",
-    pergunta: "O que é juros compostos?",
-    opcoes: [
-      "Rendimento sobre o principal de um investimento.",
-      "Rendimento sobre o principal mais os juros acumulados.",
-      "Taxa fixa de retorno em um investimento.",
-    ],
-    respostaCorreta: "Rendimento sobre o principal mais os juros acumulados.",
-    explicacao:
-      "Juros compostos são calculados sobre o capital inicial e os juros acumulados em períodos anteriores.",
-  },
-  {
-    id: "2",
-    tipo: "calculo",
-    pergunta:
-      "Se você investir R$1.000 a uma taxa de juros anual de 5%, quanto terá após um ano?",
-    respostaCorreta: "1050",
-    explicacao: "R$1.000 a 5% ao ano resultam em R$1.050 após um ano.",
-  },
-  // Adicione mais questões conforme necessário
-];
+// Habilitar animações no Android
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const Exames = ({ navigation }) => {
-  const [respostas, setRespostas] = useState({});
-  const [quizConcluido, setQuizConcluido] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
+  const [completedSections, setCompletedSections] = useState([]);
 
-  const confirmarRespostas = () => {
-    setQuizConcluido(true);
-    // Aqui, você pode adicionar lógica para calcular a pontuação
+  // Dados de exemplo para seções e temas
+  const sections = [
+    { id: "financialBasics", title: "01 Fundamentos Financeiros" },
+    { id: "savingInvesting", title: "02 Poupança e Investimento" },
+    { id: "creditDebt", title: "03 Crédito e Dívida" },
+    { id: "financialPlanning", title: "04 Planejamento Financeiro" },
+    { id: "advancedInvesting", title: "05 Investimentos Avançados" },
+  ];
+
+  const toggleSection = (section) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpandedSection(expandedSection === section ? null : section);
   };
 
-  const reiniciarQuiz = () => {
-    setRespostas({});
-    setQuizConcluido(false);
+  const navigateToExercises = (id) => {
+    // Navegar para ContExercicios com o ID do tema selecionado
+    navigation.navigate("ContExercicios", { temaId: id });
+    markSectionAsCompleted(id);
+  };
+
+  const markSectionAsCompleted = (sectionId) => {
+    setCompletedSections((prevState) => {
+      if (prevState.includes(sectionId)) {
+        return prevState;
+      } else {
+        return [...prevState, sectionId];
+      }
+    });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {questoes.map((questao, index) => (
-          <View key={index} style={styles.perguntaContainer}>
-            <Text style={styles.perguntaTexto}>{questao.pergunta}</Text>
-            {questao.tipo === "teorica" &&
-              questao.opcoes.map((opcao, idx) => (
-                <TouchableOpacity
-                  key={idx}
-                  style={[
-                    styles.opcao,
-                    respostas[questao.id] === opcao
-                      ? styles.opcaoSelecionada
-                      : {},
-                    quizConcluido
-                      ? opcao === questao.respostaCorreta
-                        ? styles.opcaoCorreta
-                        : styles.opcao
-                      : {},
-                    quizConcluido &&
-                    respostas[questao.id] !== questao.respostaCorreta &&
-                    opcao === questao.respostaCorreta
-                      ? styles.opcaoCorreta
-                      : {},
-                    quizConcluido &&
-                    respostas[questao.id] === opcao &&
-                    opcao !== questao.respostaCorreta
-                      ? styles.opcaoIncorreta
-                      : {},
-                  ]}
-                  onPress={() =>
-                    !quizConcluido &&
-                    setRespostas({ ...respostas, [questao.id]: opcao })
-                  }
-                >
-                  <Text style={styles.opcaoTexto}>{opcao}</Text>
-                </TouchableOpacity>
-              ))}
-            {questao.tipo === "calculo" && (
-              <TextInput
-                style={styles.input}
-                onChangeText={(text) =>
-                  setRespostas({ ...respostas, [questao.id]: text })
-                }
-                value={respostas[questao.id]}
-                keyboardType="numeric"
-                editable={!quizConcluido}
-              />
-            )}
-            {quizConcluido &&
-              respostas[questao.id] !== questao.respostaCorreta && (
-                <Text style={styles.explicacao}>
-                  Resposta correta: {questao.respostaCorreta}
-                </Text>
-              )}
-            {quizConcluido &&
-              respostas[questao.id] === questao.respostaCorreta && (
-                <Text style={styles.explicacao}>{questao.explicacao}</Text>
-              )}
-          </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.courseContent}>
+        <Image
+          source={require("../../assets/Desempenho.png")}
+          style={styles.image}
+        />
+        <Text style={styles.courseSummary}>
+          Este curso cobre os fundamentos da programação em Python, incluindo
+          sintaxe, variáveis, estruturas de controle e mais.
+        </Text>
+
+        {sections.map((section) => (
+          <TouchableOpacity
+            key={section.id}
+            style={styles.sectionHeader}
+            onPress={() => navigateToExercises(section.id)}
+          >
+            <Text style={styles.sectionTitle}>{section.title}</Text>
+            <AntDesign
+              name="play"
+              size={24}
+              color={completedSections.includes(section.id) ? "green" : "black"}
+            />
+          </TouchableOpacity>
         ))}
-        {!quizConcluido ? (
-          <TouchableOpacity
-            style={styles.botaoConfirmar}
-            onPress={confirmarRespostas}
-          >
-            <Text style={styles.botaoTexto}>Confirmar Respostas</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.botaoReiniciar}
-            onPress={reiniciarQuiz}
-          >
-            <Text style={styles.botaoTexto}>Voltar a Tentar</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f0f0f7",
+  },
+  courseContent: {
     padding: 20,
   },
-  perguntaContainer: {
+  image: {
+    height: 200,
+    width: "100%",
+    resizeMode: "cover",
+    marginTop: 20,
+  },
+  courseSummary: {
+    fontSize: 16,
+    color: "#666",
     marginBottom: 20,
   },
-  perguntaTexto: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  opcao: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    marginBottom: 10,
-    backgroundColor: "#f0f0f0",
-  },
-  opcaoSelecionada: {
-    backgroundColor: "#add8e6",
-  },
-  opcaoCorreta: {
-    backgroundColor: "#81C784",
-  },
-  opcaoIncorreta: {
-    backgroundColor: "#E57373",
-  },
-  opcaoTexto: {
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    marginBottom: 10,
-    backgroundColor: "#fff",
-  },
-  botaoConfirmar: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  botaoReiniciar: {
-    backgroundColor: "#FFA07A",
-    padding: 10,
-    borderRadius: 5,
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     marginTop: 20,
   },
-  botaoTexto: {
-    color: "white",
-    fontSize: 16,
+  sectionTitle: {
+    fontSize: 18,
     fontWeight: "bold",
-  },
-  explicacao: {
-    marginTop: 10,
-    fontStyle: "italic",
-    fontSize: 14,
   },
 });
 
